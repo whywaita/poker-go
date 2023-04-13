@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '',
+  basePath: '/poker-go',
   reactStrictMode: true,
   images: {
     unoptimized: false,
