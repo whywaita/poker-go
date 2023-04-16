@@ -11,7 +11,7 @@ func TestEvaluate(t *testing.T) {
 	tests := []struct {
 		name  string
 		input []poker.Card
-		want  poker.Hand
+		want  poker.HandType
 	}{
 		{
 			name: "straight",
@@ -24,7 +24,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 9, Suit: poker.Hearts},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandStraight,
+			want: poker.HandTypeStraight,
 		},
 		{
 			name: "straight is higher than pair",
@@ -37,7 +37,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 14, Suit: poker.Hearts},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandStraight,
+			want: poker.HandTypeStraight,
 		},
 		{
 			name: "High card",
@@ -50,7 +50,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 9, Suit: poker.Hearts},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandHighCard,
+			want: poker.HandTypeHighCard,
 		},
 		{
 			name: "royal flush",
@@ -63,7 +63,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 6, Suit: poker.Clubs},
 				{Rank: 7, Suit: poker.Diamonds},
 			},
-			want: poker.HandRoyalFlush,
+			want: poker.HandTypeRoyalFlush,
 		},
 		{
 			name: "straight flush",
@@ -76,7 +76,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 3, Suit: poker.Hearts},
 				{Rank: 4, Suit: poker.Diamonds},
 			},
-			want: poker.HandStraightFlush,
+			want: poker.HandTypeStraightFlush,
 		},
 		{
 			name: "four of a kind",
@@ -89,7 +89,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 3, Suit: poker.Clubs},
 				{Rank: 9, Suit: poker.Hearts},
 			},
-			want: poker.HandFourOfAKind,
+			want: poker.HandTypeFourOfAKind,
 		},
 		{
 			name: "full house",
@@ -102,7 +102,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 14, Suit: poker.Clubs},
 				{Rank: 14, Suit: poker.Diamonds},
 			},
-			want: poker.HandFullHouse,
+			want: poker.HandTypeFullHouse,
 		},
 		{
 			name: "flush",
@@ -115,7 +115,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 11, Suit: poker.Clubs},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandFlush,
+			want: poker.HandTypeFlush,
 		},
 		{
 			name: "full house",
@@ -128,7 +128,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 9, Suit: poker.Hearts},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandFullHouse,
+			want: poker.HandTypeFullHouse,
 		},
 		{
 			name: "four of a kind",
@@ -141,7 +141,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 9, Suit: poker.Hearts},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandFourOfAKind,
+			want: poker.HandTypeFourOfAKind,
 		},
 		{
 			name: "straight flush",
@@ -154,7 +154,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 9, Suit: poker.Hearts},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandStraightFlush,
+			want: poker.HandTypeStraightFlush,
 		},
 		{
 			name: "royal flush",
@@ -167,7 +167,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 3, Suit: poker.Diamonds},
 				{Rank: 9, Suit: poker.Hearts},
 			},
-			want: poker.HandRoyalFlush,
+			want: poker.HandTypeRoyalFlush,
 		},
 		{
 			name: "three of a kind",
@@ -180,7 +180,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 7, Suit: poker.Hearts},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandThreeOfAKind,
+			want: poker.HandTypeThreeOfAKind,
 		},
 		{
 			name: "two pair",
@@ -193,7 +193,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 7, Suit: poker.Hearts},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandTwoPair,
+			want: poker.HandTypeTwoPair,
 		},
 		{
 			name: "one pair",
@@ -206,7 +206,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 7, Suit: poker.Hearts},
 				{Rank: 14, Suit: poker.Spades},
 			},
-			want: poker.HandPair,
+			want: poker.HandTypePair,
 		},
 		{
 			name: "full house - pair and three of a kind",
@@ -219,7 +219,7 @@ func TestEvaluate(t *testing.T) {
 				{Rank: 5, Suit: poker.Clubs},
 				{Rank: 9, Suit: poker.Spades},
 			},
-			want: poker.HandFullHouse,
+			want: poker.HandTypeFullHouse,
 		},
 	}
 

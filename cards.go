@@ -8,7 +8,7 @@ import (
 )
 
 type Card struct {
-	Rank int
+	Rank Rank
 	Suit Suit
 }
 
@@ -40,18 +40,142 @@ func (s Suit) String() string {
 	}
 }
 
-//
-//type Hand struct {
-//	Cards []Card
-//}
+type Rank int
+
+const (
+	RankUnknown Rank = iota
+	RankDeuce        = iota
+	RankThree
+	RankFour
+	RankFive
+	RankSix
+	RankSeven
+	RankEight
+	RankNine
+	RankTen
+	RankJack
+	RankQueen
+	RankKing
+	RankAce
+)
+
+func (r Rank) String() string {
+	switch r {
+	case RankDeuce:
+		return "2"
+	case RankThree:
+		return "3"
+	case RankFour:
+		return "4"
+	case RankFive:
+		return "5"
+	case RankSix:
+		return "6"
+	case RankSeven:
+		return "7"
+	case RankEight:
+		return "8"
+	case RankNine:
+		return "9"
+	case RankTen:
+		return "T"
+	case RankJack:
+		return "J"
+	case RankQueen:
+		return "Q"
+	case RankKing:
+		return "K"
+	case RankAce:
+		return "A"
+	default:
+		return "Unknown"
+	}
+}
+
+func UnmarshalRank(r any) Rank {
+	switch r := r.(type) {
+	case string:
+		return UnmarshalRankString(r)
+	case int:
+		return UnmarshalRankInt(r)
+	default:
+		return RankUnknown
+	}
+}
+
+func UnmarshalRankString(r string) Rank {
+	switch r {
+	case "2":
+		return RankDeuce
+	case "3":
+		return RankThree
+	case "4":
+		return RankFour
+	case "5":
+		return RankFive
+	case "6":
+		return RankSix
+	case "7":
+		return RankSeven
+	case "8":
+		return RankEight
+	case "9":
+		return RankNine
+	case "T":
+		return RankTen
+	case "J":
+		return RankJack
+	case "Q":
+		return RankQueen
+	case "K":
+		return RankKing
+	case "A":
+		return RankAce
+	default:
+		return RankUnknown
+	}
+}
+
+func UnmarshalRankInt(r int) Rank {
+	switch r {
+	case 2:
+		return RankDeuce
+	case 3:
+		return RankThree
+	case 4:
+		return RankFour
+	case 5:
+		return RankFive
+	case 6:
+		return RankSix
+	case 7:
+		return RankSeven
+	case 8:
+		return RankEight
+	case 9:
+		return RankNine
+	case 10:
+		return RankTen
+	case 11:
+		return RankJack
+	case 12:
+		return RankQueen
+	case 13:
+		return RankKing
+	case 14:
+		return RankAce
+	default:
+		return RankUnknown
+	}
+}
 
 func NewDeck() *Deck {
 	d := &Deck{Cards: make([]Card, 52)}
 	for i := 0; i < 13; i++ {
-		d.Cards[i] = Card{i + 2, Hearts}
-		d.Cards[i+13] = Card{i + 2, Clubs}
-		d.Cards[i+26] = Card{i + 2, Diamonds}
-		d.Cards[i+39] = Card{i + 2, Spades}
+		d.Cards[i] = Card{UnmarshalRank(i + 2), Hearts}
+		d.Cards[i+13] = Card{UnmarshalRank(i + 2), Clubs}
+		d.Cards[i+26] = Card{UnmarshalRank(i + 2), Diamonds}
+		d.Cards[i+39] = Card{UnmarshalRank(i + 2), Spades}
 	}
 	return d
 }
@@ -145,61 +269,61 @@ func NewPlayer(name string, hand []Card) *Player {
 	}
 }
 
-func (p *Player) Evaluate(board []Card) (Hand, []Card, error) {
+func (p *Player) Evaluate(board []Card) (HandType, []Card, error) {
 	cards := append(p.Hand, board...)
 	return Evaluate(cards)
 }
 
-func Evaluate(cards []Card) (Hand, []Card, error) {
+func Evaluate(cards []Card) (HandType, []Card, error) {
 	if len(cards) != 7 {
 		return 0, nil, fmt.Errorf("invalid number of cards")
 	}
 	return evaluate(cards)
 }
 
-type Hand int
+type HandType int
 
 const (
-	HandRoyalFlush    Hand = 10
-	HandStraightFlush Hand = 9
-	HandFourOfAKind   Hand = 8
-	HandFullHouse     Hand = 7
-	HandFlush         Hand = 6
-	HandStraight      Hand = 5
-	HandThreeOfAKind  Hand = 4
-	HandTwoPair       Hand = 3
-	HandPair          Hand = 2
-	HandHighCard      Hand = 1
-	HandUnknown       Hand = 0
+	HandTypeRoyalFlush    HandType = 10
+	HandTypeStraightFlush HandType = 9
+	HandTypeFourOfAKind   HandType = 8
+	HandTypeFullHouse     HandType = 7
+	HandTypeFlush         HandType = 6
+	HandTypeStraight      HandType = 5
+	HandTypeThreeOfAKind  HandType = 4
+	HandTypeTwoPair       HandType = 3
+	HandTypePair          HandType = 2
+	HandTypeHighCard      HandType = 1
+	HandTypeUnknown       HandType = 0
 )
 
-func (h Hand) String() string {
+func (h HandType) String() string {
 	switch h {
-	case HandRoyalFlush:
+	case HandTypeRoyalFlush:
 		return "Royal Flush"
-	case HandStraightFlush:
+	case HandTypeStraightFlush:
 		return "Straight Flush"
-	case HandFourOfAKind:
+	case HandTypeFourOfAKind:
 		return "Four of a Kind"
-	case HandFullHouse:
+	case HandTypeFullHouse:
 		return "Full House"
-	case HandFlush:
+	case HandTypeFlush:
 		return "Flush"
-	case HandStraight:
+	case HandTypeStraight:
 		return "Straight"
-	case HandThreeOfAKind:
+	case HandTypeThreeOfAKind:
 		return "Three of a Kind"
-	case HandTwoPair:
+	case HandTypeTwoPair:
 		return "Two Pair"
-	case HandPair:
+	case HandTypePair:
 		return "Pair"
-	case HandHighCard:
+	case HandTypeHighCard:
 		return "High Card"
 	}
 	return "unknown"
 }
 
-func evaluate(cards []Card) (Hand, []Card, error) {
+func evaluate(cards []Card) (HandType, []Card, error) {
 	cards = sortByRankDesc(cards)
 
 	flush, _ := isFlush(cards)
@@ -211,15 +335,15 @@ func evaluate(cards []Card) (Hand, []Card, error) {
 	if straightFlush != nil {
 		sortByRank(straightFlush)
 		if straightFlush[4].Rank == 14 {
-			return HandRoyalFlush, straightFlush, nil
+			return HandTypeRoyalFlush, straightFlush, nil
 		}
-		return HandStraightFlush, straightFlush, nil
+		return HandTypeStraightFlush, straightFlush, nil
 	} else if fullHouse != nil {
-		return HandFullHouse, fullHouse, nil
+		return HandTypeFullHouse, fullHouse, nil
 	} else if flush != nil {
-		return HandFlush, flush, nil
+		return HandTypeFlush, flush, nil
 	} else if straight != nil {
-		return HandStraight, *straight, nil
+		return HandTypeStraight, *straight, nil
 	} else if len(pairs) != 0 {
 		switch {
 		case len(pairs[0]) == 3:
@@ -231,7 +355,7 @@ func evaluate(cards []Card) (Hand, []Card, error) {
 			threeOfAKind = append(threeOfAKind, cards[0])
 			threeOfAKind = append(threeOfAKind, cards[1])
 
-			return HandThreeOfAKind, threeOfAKind, nil
+			return HandTypeThreeOfAKind, threeOfAKind, nil
 		case len(pairs[0]) == 4:
 			fourOfAKind := []Card{pairs[0][0], pairs[0][1], pairs[0][2], pairs[0][3]}
 			for _, card := range pairs[0] {
@@ -239,7 +363,7 @@ func evaluate(cards []Card) (Hand, []Card, error) {
 			}
 			sortByRankDesc(cards)
 			fourOfAKind = append(fourOfAKind, cards[0])
-			return HandFourOfAKind, fourOfAKind, nil
+			return HandTypeFourOfAKind, fourOfAKind, nil
 		case len(pairs) == 1:
 			pair := []Card{pairs[0][0], pairs[0][1]}
 			for _, card := range pairs[0] {
@@ -250,7 +374,7 @@ func evaluate(cards []Card) (Hand, []Card, error) {
 			pair = append(pair, cards[1])
 			pair = append(pair, cards[2])
 
-			return HandPair, pair, nil
+			return HandTypePair, pair, nil
 		case len(pairs) >= 2:
 			twoPair := []Card{pairs[0][0], pairs[0][1], pairs[1][0], pairs[1][1]}
 			for _, card := range pairs[0] {
@@ -262,15 +386,15 @@ func evaluate(cards []Card) (Hand, []Card, error) {
 			sortByRankDesc(cards)
 			twoPair = append(twoPair, cards[0])
 
-			return HandTwoPair, twoPair, nil
+			return HandTypeTwoPair, twoPair, nil
 		default:
-			return HandUnknown, nil, fmt.Errorf("invalid pairs (pairs: %v)", pairs)
+			return HandTypeUnknown, nil, fmt.Errorf("invalid pairs (pairs: %v)", pairs)
 		}
 	}
 
 	sortByRankDesc(cards)
 	highCard := []Card{cards[0], cards[1], cards[2], cards[3], cards[4]}
-	return HandHighCard, highCard, nil
+	return HandTypeHighCard, highCard, nil
 }
 
 func IsStraightFlush(cards []Card) []Card {
@@ -321,11 +445,9 @@ func getSuitCards(cards []Card, suit Suit) []Card {
 }
 
 func IsStraight(cards []Card) *[]Card {
-	cards = sortByRank(cards)
-	if cards[0].Rank == 14 && cards[1].Rank == 5 && cards[2].Rank == 4 && cards[3].Rank == 3 && cards[4].Rank == 2 {
-		return &[]Card{cards[0], cards[1], cards[2], cards[3], cards[4]}
-	}
+	cards = uniqueCards(cards)
 
+	cards = sortByRank(cards)
 	// Straight is staring three in seven cards
 	for i := 0; i < 3; i++ {
 		count := 0
@@ -348,23 +470,19 @@ func IsStraight(cards []Card) *[]Card {
 	}
 
 	// A to 5 is straight
-	cards = sortByRankDesc(cards)
-	if cards[0].Rank == 14 {
-		cards = sortByRank(cards)
+	cards = sortByRank(cards)
+	if cards[0].Rank == RankDeuce {
+		count := 0
 		for i := 0; i < len(cards)-1; i++ {
-			if cards[i].Rank == 2 {
-				count := 0
-				for j := i; j < i+5; j++ {
-					if cards[j].Rank == cards[j+1].Rank-1 {
-						count++
-					} else {
-						break
-					}
-				}
-				if count == 3 {
-					return &[]Card{cards[i], cards[i+1], cards[i+2], cards[i+3], cards[len(cards)-1]}
-				}
+			if cards[i].Rank == cards[i+1].Rank-1 {
+				count++
+			} else {
+				break
 			}
+		}
+
+		if count == 3 && cards[len(cards)-1].Rank == RankAce {
+			return &[]Card{cards[0], cards[1], cards[2], cards[3], cards[len(cards)-1]}
 		}
 	}
 
@@ -372,7 +490,7 @@ func IsStraight(cards []Card) *[]Card {
 }
 
 func GetPairs(cards []Card) [][]Card {
-	ranks := make(map[int][]int)
+	ranks := make(map[Rank][]int)
 	for i, card := range cards {
 		ranks[card.Rank] = append(ranks[card.Rank], i)
 	}
@@ -425,9 +543,7 @@ func isFullHouse(pairs [][]Card) []Card {
 	return []Card{pairs[0][0], pairs[0][1], pairs[0][2], pairs[1][0], pairs[1][1]}
 }
 
-func CompareHands(hand1 []Card, hand2 []Card, board []Card) (string, error) {
-	player1 := NewPlayer("player1", hand1)
-	player2 := NewPlayer("player2", hand2)
+func CompareHands(player1, player2 Player, board []Card) (string, error) {
 	score1, _, err := player1.Evaluate(board)
 	if err != nil {
 		return "", fmt.Errorf("failed to evaluate %s's hand: %w", player1.Name, err)
@@ -437,10 +553,6 @@ func CompareHands(hand1 []Card, hand2 []Card, board []Card) (string, error) {
 		return "", fmt.Errorf("failed to evaluate %s's hand: %w", player2.Name, err)
 	}
 
-	if score1 == HandThreeOfAKind && score2 == HandTwoPair {
-		fmt.Printf("score1 %s | score2 %s | player1 %v | player2 %v | board %v\n", score1, score2, player1.Hand, player2.Hand, board)
-	}
-
 	if score1 > score2 {
 		return player1.Name, nil
 	} else if score1 < score2 {
@@ -448,56 +560,56 @@ func CompareHands(hand1 []Card, hand2 []Card, board []Card) (string, error) {
 	} else {
 		// If there is a tie, break it by hand rank
 		switch score1 {
-		case HandStraightFlush:
-			winner, err := breakTieByStraightFlush(*player1, *player2, board)
+		case HandTypeStraightFlush:
+			winner, err := breakTieByStraightFlush(player1, player2, board)
 			if err != nil {
 				return "", fmt.Errorf("breakTieByStraightFlush(): %w", err)
 			}
 			return winner, nil
-		case HandFourOfAKind:
-			winner, err := breakTieByFourOfAKind(*player1, *player2, board)
+		case HandTypeFourOfAKind:
+			winner, err := breakTieByFourOfAKind(player1, player2, board)
 			if err != nil {
 				return "", fmt.Errorf("breakTieByFourOfAKind(): %w", err)
 			}
 			return winner, nil
-		case HandFullHouse:
-			winner, err := breakTieByFullHouse(*player1, *player2, board)
+		case HandTypeFullHouse:
+			winner, err := breakTieByFullHouse(player1, player2, board)
 			if err != nil {
 				return "", fmt.Errorf("breakTieByFullHouse(): %w", err)
 			}
 			return winner, nil
-		case HandFlush:
-			winner, err := breakTieByFlush(*player1, *player2, board)
+		case HandTypeFlush:
+			winner, err := breakTieByFlush(player1, player2, board)
 			if err != nil {
 				return "", fmt.Errorf("breakTieByFlush(): %w", err)
 			}
 			return winner, nil
-		case HandStraight:
-			winner, err := breakTieByStraight(*player1, *player2, board)
+		case HandTypeStraight:
+			winner, err := breakTieByStraight(player1, player2, board)
 			if err != nil {
 				return "", fmt.Errorf("breakTieByStraight(): %w", err)
 			}
 			return winner, nil
-		case HandThreeOfAKind:
-			winner, err := breakTieByThreeOfAKind(*player1, *player2, board)
+		case HandTypeThreeOfAKind:
+			winner, err := breakTieByThreeOfAKind(player1, player2, board)
 			if err != nil {
 				return "", fmt.Errorf("breakTieByThreeOfAKind(): %w", err)
 			}
 			return winner, nil
-		case HandTwoPair:
-			winner, err := breakTieByTwoPair(*player1, *player2, board)
+		case HandTypeTwoPair:
+			winner, err := breakTieByTwoPair(player1, player2, board)
 			if err != nil {
 				return "", fmt.Errorf("breakTieByTwoPair(): %w", err)
 			}
 			return winner, nil
-		case HandPair:
-			winner, err := breakTieByPair(*player1, *player2, board)
+		case HandTypePair:
+			winner, err := breakTieByPair(player1, player2, board)
 			if err != nil {
 				return "", fmt.Errorf("breakTieByPair(): %w", err)
 			}
 			return winner, nil
 		default:
-			return breakTieByHighCard(*player1, *player2), nil
+			return breakTieByHighCard(player1, player2), nil
 		}
 	}
 }
@@ -514,6 +626,18 @@ func sortByRank(cards []Card) []Card {
 		return cards[i].Rank < cards[j].Rank
 	})
 	return cards
+}
+
+func uniqueCards(cards []Card) []Card {
+	unique := make([]Card, 0, len(cards))
+	seen := make(map[Rank]bool)
+	for _, c := range cards {
+		if !seen[c.Rank] {
+			unique = append(unique, c)
+			seen[c.Rank] = true
+		}
+	}
+	return unique
 }
 
 func breakTieByHighCard(p1, p2 Player) string {
@@ -716,29 +840,49 @@ func breakTieByStraightFlush(p1, p2 Player, board []Card) (string, error) {
 	}
 }
 
-func EvaluateEquity(hand1 []Card, hand2 []Card) (float64, float64, error) {
+func CompareVSMadeHand(p1 Player) error {
 	deck := NewDeck()
-	for _, c := range hand1 {
+	for _, c := range p1.Hand {
 		deck.removeCard(c)
 	}
-	for _, c := range hand2 {
+
+	for _, board := range AllCombinations(deck.Cards, 5) {
+		madehand := NewBestMadeHand(append(p1.Hand, board...))
+
+		score, hand, err := p1.Evaluate(board)
+		if err != nil {
+			return err
+		}
+
+		if madehand.Type() != score {
+			fmt.Println("madehand:", madehand.Type(), "score:", score, "hand:", hand, "board:", board, "p1:", p1.Hand)
+		}
+	}
+
+	return nil
+}
+
+func EvaluateEquity(p1, p2 Player) (float64, float64, error) {
+	deck := NewDeck()
+	for _, c := range p1.Hand {
 		deck.removeCard(c)
 	}
-	player1 := NewPlayer("player1", hand1)
-	player2 := NewPlayer("player2", hand2)
+	for _, c := range p2.Hand {
+		deck.removeCard(c)
+	}
 	var player1Wins int
 	var player2Wins int
 	var ties int
 	for _, board := range AllCombinations(deck.Cards, 5) {
-		winner, err := CompareHands(player1.Hand, player2.Hand, board)
+		winner, err := CompareHands(p1, p2, board)
 		if err != nil {
 			return 0, 0, err
 		}
-		//fmt.Println(winner)
+		//winner := CompareHandsByMadeHand(p1, p2, board)
 		switch winner {
-		case "player1":
+		case p1.Name:
 			player1Wins++
-		case "player2":
+		case p2.Name:
 			player2Wins++
 		case "tie":
 			ties++
@@ -750,6 +894,20 @@ func EvaluateEquity(hand1 []Card, hand2 []Card) (float64, float64, error) {
 	total := player1Wins + player2Wins + ties
 	fmt.Println("total:", total)
 	return float64(player1Wins+(ties/2)) / float64(total), float64(player2Wins+(ties/2)) / float64(total), nil
+}
+
+func CompareHandsByMadeHand(player1, player2 Player, board []Card) string {
+	madehand1 := NewBestMadeHand(append(player1.Hand, board...))
+	madehand2 := NewBestMadeHand(append(player2.Hand, board...))
+
+	switch {
+	case madehand1.Power() > madehand2.Power():
+		return player1.Name
+	case madehand1.Power() < madehand2.Power():
+		return player2.Name
+	default:
+		return "tie"
+	}
 }
 
 func AllCombinations(cards []Card, k int) [][]Card {
