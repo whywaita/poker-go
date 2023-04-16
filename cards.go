@@ -334,7 +334,7 @@ func evaluate(cards []Card) (HandType, []Card, error) {
 
 	if straightFlush != nil {
 		sortByRank(straightFlush)
-		if straightFlush[4].Rank == 14 {
+		if straightFlush[4].Rank == RankAce {
 			return HandTypeRoyalFlush, straightFlush, nil
 		}
 		return HandTypeStraightFlush, straightFlush, nil
@@ -465,7 +465,7 @@ func IsStraight(cards []Card) *[]Card {
 
 		// if count is 4, it is straight
 		if count == 4 {
-			return &[]Card{cards[i], cards[i+1], cards[i+2], cards[i+3], cards[i+4]}
+			return &[]Card{cards[i+4], cards[i+3], cards[i+2], cards[i+1], cards[i]}
 		}
 	}
 
@@ -482,7 +482,7 @@ func IsStraight(cards []Card) *[]Card {
 		}
 
 		if count == 3 && cards[len(cards)-1].Rank == RankAce {
-			return &[]Card{cards[0], cards[1], cards[2], cards[3], cards[len(cards)-1]}
+			return &[]Card{cards[3], cards[2], cards[1], cards[0], cards[len(cards)-1]}
 		}
 	}
 
