@@ -85,7 +85,7 @@ func generateCards() []poker.Card {
 	for i := 0; i < 30; i++ {
 		rank := rand.Intn(13) + 2
 		suit := rand.Intn(4)
-		card := poker.Card{Rank: rank, Suit: poker.Suit(suit)}
+		card := poker.Card{Rank: poker.UnmarshalRankInt(rank), Suit: poker.Suit(suit)}
 		if !isExist(cards, card) {
 			cards = append(cards, card)
 			if len(cards) == 7 {
