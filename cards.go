@@ -951,9 +951,6 @@ func EvaluateEquity(players []Player) ([]float64, error) {
 		case len(winners) == len(players):
 			ties++
 		default:
-			if len(winners) != 1 {
-				fmt.Println("winners:", winners, "board:", board)
-			}
 			for _, winner := range winners {
 				wins[indexOf(winner, players)] += 1
 			}
@@ -968,8 +965,6 @@ func EvaluateEquity(players []Player) ([]float64, error) {
 		equities = append(equities, float64(win+baseTies)/float64(total))
 	}
 
-	fmt.Println("ties:", ties)
-	fmt.Println("total:", total)
 	return equities, nil
 }
 
