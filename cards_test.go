@@ -235,3 +235,78 @@ func TestEvaluate(t *testing.T) {
 		})
 	}
 }
+
+func TestEvaluateEquity(t *testing.T) {
+	tests := []struct {
+		name  string
+		input []poker.Player
+		want  []float64
+	}{
+		{
+			name: "two players",
+			input: []poker.Player{
+				{
+					Name: "player1",
+					Hand: []poker.Card{
+						{Rank: poker.RankDeuce, Suit: poker.Hearts},
+						{Rank: poker.RankThree, Suit: poker.Diamonds},
+					},
+				},
+				{
+					Name: "player2",
+					Hand: []poker.Card{
+						{Rank: poker.RankAce, Suit: poker.Hearts},
+						{Rank: poker.RankAce, Suit: poker.Diamonds},
+					},
+				},
+			},
+			want: []float64{
+				0.12030632411067194,
+				0.879693091880881,
+			},
+		},
+		{
+			name: "three players",
+			input: []poker.Player{
+				{
+					Name: "player1",
+					Hand: []poker.Card{
+						{Rank: poker.RankDeuce, Suit: poker.Hearts},
+						{Rank: poker.RankThree, Suit: poker.Diamonds},
+					},
+				},
+				{
+					Name: "player2",
+					Hand: []poker.Card{
+						{Rank: poker.RankAce, Suit: poker.Hearts},
+						{Rank: poker.RankAce, Suit: poker.Diamonds},
+					},
+				},
+				{
+					Name: "player3",
+					Hand: []poker.Card{
+						{Rank: poker.RankEight, Suit: poker.Spades},
+						{Rank: poker.RankSeven, Suit: poker.Spades},
+					},
+				},
+			},
+			want: []float64{
+				0.08532603224210909,
+				0.6632488396896891,
+				0.2514251280682019,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := poker.EvaluateEquity(tt.input)
+			if err != nil {
+				t.Errorf("unexpected error: %s", err)
+			}
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("mismatch (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
