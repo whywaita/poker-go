@@ -13,5 +13,6 @@ build-ui: ## Build
 	next export
 
 test: ## Exec test
+	go vet -v ./...
 	go test -v ./...
 	cd ui/ && npm run lint
