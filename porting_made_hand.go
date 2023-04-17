@@ -1,6 +1,8 @@
 package poker
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // made_hand.go is porting from github.com/axross/poker
 

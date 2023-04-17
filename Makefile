@@ -14,5 +14,4 @@ build-ui: ## Build
 
 test: ## Exec test
 	go test -v ./...
-	cd ui/
-	npm run lint
+	cd ui/ && npm run lint
