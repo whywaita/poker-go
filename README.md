@@ -88,3 +88,5 @@ func main() {
 $ go run calc_equities.go
 [{2 hearts} {3 diamonds}] equity: 0.085326, [{A hearts} {A diamonds}] equity: 0.663249, [{7 clubs} {8 clubs}] equity 0.251425
 ```
+
+- Full documents are available at [pkg.go.dev](https://pkg.go.dev/github.com/whywaita/poker-go)
