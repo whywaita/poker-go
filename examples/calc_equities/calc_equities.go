@@ -14,18 +14,6 @@ func main() {
 }
 
 func run() error {
-	//winner, err := poker.CompareHands(h1, h2, []poker.Card{
-	//	{Rank: 6, Suit: poker.Clubs},
-	//	{Rank: 7, Suit: poker.Clubs},
-	//	{Rank: 8, Suit: poker.Diamonds},
-	//	{Rank: 9, Suit: poker.Clubs},
-	//	{Rank: 10, Suit: poker.Clubs},
-	//})
-	//if err != nil {
-	//	return err
-	//}
-	//fmt.Println(winner)
-
 	h1 := []poker.Card{
 		{Rank: poker.RankDeuce, Suit: poker.Hearts},
 		{Rank: poker.RankThree, Suit: poker.Diamonds},
