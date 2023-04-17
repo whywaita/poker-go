@@ -37,18 +37,18 @@ func run() error {
 		{Rank: poker.RankAce, Suit: poker.Diamonds},
 	}
 	p2 := poker.NewPlayer("player2", h2)
-	h1Equity, h2Equity, err := poker.EvaluateEquity(*p1, *p2)
+
+	h3 := []poker.Card{
+		{Rank: poker.RankSeven, Suit: poker.Clubs},
+		{Rank: poker.RankEight, Suit: poker.Clubs},
+	}
+	p3 := poker.NewPlayer("player3", h3)
+
+	equities, err := poker.EvaluateEquity([]poker.Player{*p1, *p2, *p3})
 	if err != nil {
 		return fmt.Errorf("failed to evaluate equity: %w", err)
 	}
-	fmt.Printf("%v equity: %f, %v equity: %f\n", h1, h1Equity, h2, h2Equity)
-
-	//if err := poker.CompareVSMadeHand(poker.Player{
-	//	Name: "play",
-	//	Hand: h2,
-	//}); err != nil {
-	//	return fmt.Errorf("failed to compare vs made hand: %w", err)
-	//}
+	fmt.Printf("%v equity: %f, %v equity: %f, %v equity %f\n", h1, equities[0], h2, equities[1], h3, equities[2])
 
 	return nil
 }

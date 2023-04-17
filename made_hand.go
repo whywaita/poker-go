@@ -50,6 +50,10 @@ func (hand *MadeHand) Type() HandType {
 		return HandTypeFourOfAKind
 	}
 
+	if hand.Value == 1 {
+		return HandTypeRoyalFlush
+	}
+
 	return HandTypeStraightFlush
 
 }
