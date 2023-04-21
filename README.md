@@ -33,7 +33,7 @@ func main() {
 
 	handtype, cards, err := poker.Evaluate(append(p1.Hand, board...))
 	if err != nil {
-		log.Fatalf("poker.Evaluate(append(%s. %s...)): %w", p1.Hand, board, err)
+		log.Fatalf("poker.Evaluate(append(%s. %s...)): %v", p1.Hand, board, err)
 	}
 
 	fmt.Printf("handtype: %s, cards: %s\n", handtype, cards)
@@ -78,7 +78,7 @@ func main() {
 
 	equities, err := poker.EvaluateEquity([]poker.Player{*p1, *p2, *p3})
 	if err != nil {
-		log.Fatalf("failed to evaluate equity: %w", err)
+		log.Fatalf("failed to evaluate equity: %v", err)
 	}
 	fmt.Printf("%v equity: %f, %v equity: %f, %v equity %f\n", h1, equities[0], h2, equities[1], h3, equities[2])
 }
