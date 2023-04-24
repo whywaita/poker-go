@@ -263,7 +263,7 @@ func removeCards(cards []Card, c Card) []Card {
 type Player struct {
 	Name  string
 	Hand  []Card
-	Score int
+	Score HandType
 }
 
 func NewPlayer(name string, hand []Card) *Player {
