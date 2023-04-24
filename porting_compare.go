@@ -81,9 +81,13 @@ func CompareHandsByMadeHand(players []Player, board []Card) ([]Player, error) {
 	for i, player := range players {
 		md := NewBestMadeHand(append(player.Hand, board...))
 
-		if mp.hand == nil {
+		if mp.score == HandTypeUnknown {
 			mp = maxPlayer{
-				player:    player,
+				player: Player{
+					Name:  player.Name,
+					Hand:  player.Hand,
+					Score: md.Type(),
+				},
 				hand:      nil,
 				score:     md.Type(),
 				tiePlayer: nil,
@@ -94,7 +98,11 @@ func CompareHandsByMadeHand(players []Player, board []Card) ([]Player, error) {
 		switch {
 		case md.Type() > mp.score:
 			mp = maxPlayer{
-				player:    player,
+				player: Player{
+					Name:  player.Name,
+					Hand:  player.Hand,
+					Score: md.Type(),
+				},
 				hand:      nil,
 				score:     md.Type(),
 				tiePlayer: nil,
@@ -107,7 +115,11 @@ func CompareHandsByMadeHand(players []Player, board []Card) ([]Player, error) {
 			switch {
 			case md.Power() > maxMD.Power():
 				mp = maxPlayer{
-					player:    player,
+					player: Player{
+						Name:  player.Name,
+						Hand:  player.Hand,
+						Score: md.Type(),
+					},
 					hand:      nil,
 					score:     md.Type(),
 					tiePlayer: nil,
