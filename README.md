@@ -90,3 +90,10 @@ $ go run calc_equities.go
 ```
 
 - Full documents are available at [pkg.go.dev](https://pkg.go.dev/github.com/whywaita/poker-go)
+
+## LICENSE
+
+MIT License
+
+`porting_made_hand.go` and `porting_precalculated_table.go` is porting from [axross/poker](https://github.com/axross/poker).
+Only these files are under Apache License 2.0 from the original works.
