@@ -29,6 +29,10 @@ func CompareVSMadeHand(p1 Player) error {
 
 // EvaluateEquityByMadeHand returns the equity of each player in the game.
 func EvaluateEquityByMadeHand(players []Player) ([]float64, error) {
+	return EvaluateEquityByMadeHandWithCommunity(players, nil)
+}
+
+func EvaluateEquityByMadeHandWithCommunity(players []Player, community []Card) ([]float64, error) {
 	deck := NewDeck()
 
 	for _, p := range players {
@@ -37,12 +41,16 @@ func EvaluateEquityByMadeHand(players []Player) ([]float64, error) {
 		}
 	}
 
+	for _, c := range community {
+		deck.removeCard(c)
+	}
+
 	wins := make([]int, len(players))
 
 	var ties int
 	var total int
-	for _, board := range AllCombinations(deck.Cards, 5) {
-		winners, err := CompareHandsByMadeHand(players, board)
+	for _, board := range AllCombinations(deck.Cards, 5-len(community)) {
+		winners, err := CompareHandsByMadeHand(players, append(community, board...))
 		if err != nil {
 			return nil, err
 		}

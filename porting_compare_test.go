@@ -185,3 +185,122 @@ func TestEvaluateEquityByMadeHand(t *testing.T) {
 		})
 	}
 }
+
+func TestEvaluateEquityByMadeHandWithCommunity(t *testing.T) {
+	type input struct {
+		players   []poker.Player
+		community []poker.Card
+	}
+
+	tests := []struct {
+		name  string
+		input input
+		want  []float64
+	}{
+		{
+			name: "two players - flop open-end straight draw",
+			input: input{
+				players: []poker.Player{
+					{
+						Name: "player1",
+						Hand: []poker.Card{
+							{Rank: poker.RankDeuce, Suit: poker.Hearts},
+							{Rank: poker.RankThree, Suit: poker.Diamonds},
+						},
+					},
+					{
+						Name: "player2",
+						Hand: []poker.Card{
+							{Rank: poker.RankAce, Suit: poker.Hearts},
+							{Rank: poker.RankAce, Suit: poker.Diamonds},
+						},
+					},
+				},
+				community: []poker.Card{
+					{Rank: poker.RankFour, Suit: poker.Spades},
+					{Rank: poker.RankFive, Suit: poker.Spades},
+					{Rank: poker.RankEight, Suit: poker.Spades},
+				},
+			},
+			want: []float64{
+				0.23636363636363636,
+				0.7636363636363637,
+			},
+		},
+		{
+			name: "two players - turn made straight",
+			input: input{
+				players: []poker.Player{
+					{
+						Name: "player1",
+						Hand: []poker.Card{
+							{Rank: poker.RankDeuce, Suit: poker.Hearts},
+							{Rank: poker.RankThree, Suit: poker.Diamonds},
+						},
+					},
+					{
+						Name: "player2",
+						Hand: []poker.Card{
+							{Rank: poker.RankAce, Suit: poker.Hearts},
+							{Rank: poker.RankAce, Suit: poker.Diamonds},
+						},
+					},
+				},
+				community: []poker.Card{
+					{Rank: poker.RankFour, Suit: poker.Spades},
+					{Rank: poker.RankFive, Suit: poker.Spades},
+					{Rank: poker.RankEight, Suit: poker.Spades},
+					{Rank: poker.RankSix, Suit: poker.Clubs},
+				},
+			},
+			want: []float64{
+				0.9545454545454546,
+				0.045454545454545456,
+			},
+		},
+		{
+			name: "two players - river made straight in community",
+			input: input{
+				players: []poker.Player{
+					{
+						Name: "player1",
+						Hand: []poker.Card{
+							{Rank: poker.RankDeuce, Suit: poker.Hearts},
+							{Rank: poker.RankThree, Suit: poker.Diamonds},
+						},
+					},
+					{
+						Name: "player2",
+						Hand: []poker.Card{
+							{Rank: poker.RankAce, Suit: poker.Hearts},
+							{Rank: poker.RankAce, Suit: poker.Diamonds},
+						},
+					},
+				},
+				community: []poker.Card{
+					{Rank: poker.RankFour, Suit: poker.Spades},
+					{Rank: poker.RankFive, Suit: poker.Spades},
+					{Rank: poker.RankEight, Suit: poker.Spades},
+					{Rank: poker.RankSix, Suit: poker.Clubs},
+					{Rank: poker.RankSeven, Suit: poker.Diamonds},
+				},
+			},
+			want: []float64{
+				0,
+				0,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := poker.EvaluateEquityByMadeHandWithCommunity(tt.input.players, tt.input.community)
+			if err != nil {
+				t.Errorf("unexpected error: %s", err)
+			}
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("mismatch (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
