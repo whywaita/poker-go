@@ -1,7 +1,6 @@
 package poker_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -100,7 +99,6 @@ func TestCompareHandsByMadeHand(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := poker.CompareHandsByMadeHand(tt.input.players, tt.input.board)
-			fmt.Println(got)
 			if err != nil {
 				t.Errorf("unexpected error: %s", err)
 			}
