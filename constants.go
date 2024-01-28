@@ -38,6 +38,21 @@ func (s Suit) String() string {
 	}
 }
 
+func UnmarshalSuitString(s string) Suit {
+	switch s {
+	case "hearts", "h":
+		return Hearts
+	case "clubs", "c":
+		return Clubs
+	case "diamonds", "d":
+		return Diamonds
+	case "spades", "s":
+		return Spades
+	default:
+		return -1
+	}
+}
+
 type Rank int
 
 const (
