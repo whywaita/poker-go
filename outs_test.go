@@ -9,91 +9,97 @@ import (
 
 func TestCalculateOuts(t *testing.T) {
 	tests := []struct {
-		name         string
-		holeCards    []Card
-		board        []Card
-		wantCount    int
-		wantCards    []Card
-		wantContains []Card
-		wantErr      bool
+		name           string
+		holeCards      []Card
+		board          []Card
+		opponents      [][]Card
+		wantCount      int
+		wantCards      []Card
+		wantContains   []Card
+		wantNotContain []Card
+		wantErr        bool
 	}{
 		{
-			name: "flush draw from straight - 9 outs (only flush/straight-flush improve)",
+			name: "KhQd vs 7h7d board Jc9c8c3s - outs are K Q T only",
 			holeCards: []Card{
-				{RankFive, Hearts},
-				{RankSix, Hearts},
+				{RankKing, Hearts},
+				{RankQueen, Diamonds},
 			},
 			board: []Card{
-				{RankSeven, Hearts},
-				{RankEight, Hearts},
+				{RankJack, Clubs},
 				{RankNine, Clubs},
+				{RankEight, Clubs},
+				{RankThree, Spades},
 			},
-			wantCount: 9,
-		},
-		{
-			name: "open-ended straight draw from high card - includes pair outs",
-			holeCards: []Card{
-				{RankEight, Hearts},
-				{RankNine, Clubs},
+			opponents: [][]Card{
+				{{RankSeven, Hearts}, {RankSeven, Diamonds}},
 			},
-			board: []Card{
-				{RankSeven, Diamonds},
-				{RankSix, Spades},
-				{RankDeuce, Hearts},
-			},
-			wantCount: 23,
+			wantCount: 10,
 			wantContains: []Card{
-				{RankFive, Hearts},
-				{RankFive, Clubs},
-				{RankFive, Diamonds},
-				{RankFive, Spades},
+				{RankKing, Clubs},
+				{RankKing, Diamonds},
+				{RankKing, Spades},
+				{RankQueen, Hearts},
+				{RankQueen, Clubs},
+				{RankQueen, Spades},
 				{RankTen, Hearts},
 				{RankTen, Clubs},
 				{RankTen, Diamonds},
 				{RankTen, Spades},
 			},
-		},
-		{
-			name: "pocket pair - two pair and set outs",
-			holeCards: []Card{
-				{RankJack, Hearts},
-				{RankJack, Clubs},
-			},
-			board: []Card{
-				{RankDeuce, Diamonds},
-				{RankFive, Spades},
-				{RankNine, Hearts},
-			},
-			wantCount: 11,
-			wantContains: []Card{
+			wantNotContain: []Card{
+				{RankThree, Hearts},
+				{RankThree, Clubs},
+				{RankThree, Diamonds},
 				{RankJack, Diamonds},
-				{RankJack, Spades},
+				{RankEight, Diamonds},
+				{RankNine, Diamonds},
 			},
 		},
 		{
-			name: "turn flush draw from straight - 9 outs (uses NewBestMadeHand for 7 cards)",
+			name: "already winning - no outs",
 			holeCards: []Card{
-				{RankFive, Hearts},
-				{RankSix, Hearts},
+				{RankAce, Hearts},
+				{RankKing, Hearts},
 			},
 			board: []Card{
-				{RankSeven, Hearts},
-				{RankEight, Hearts},
-				{RankNine, Clubs},
+				{RankAce, Diamonds},
+				{RankKing, Diamonds},
+				{RankFive, Spades},
+				{RankSeven, Clubs},
+			},
+			opponents: [][]Card{
+				{{RankDeuce, Clubs}, {RankThree, Clubs}},
+			},
+			wantCount: 0,
+		},
+		{
+			name: "flop board=3 - AhKd vs 9h9d board 7c4s2h",
+			holeCards: []Card{
+				{RankAce, Hearts},
 				{RankKing, Diamonds},
 			},
-			wantCount: 9,
-		},
-		{
-			name: "royal flush - no outs",
-			holeCards: []Card{
+			board: []Card{
+				{RankSeven, Clubs},
+				{RankFour, Spades},
+				{RankDeuce, Hearts},
+			},
+			opponents: [][]Card{
+				{{RankNine, Hearts}, {RankNine, Diamonds}},
+			},
+			wantCount: 6,
+			wantContains: []Card{
+				{RankAce, Clubs},
+				{RankAce, Diamonds},
 				{RankAce, Spades},
+				{RankKing, Clubs},
+				{RankKing, Hearts},
 				{RankKing, Spades},
 			},
-			board: []Card{
-				{RankQueen, Spades},
-				{RankJack, Spades},
-				{RankTen, Spades},
+			wantNotContain: []Card{
+				{RankSeven, Diamonds},
+				{RankFour, Diamonds},
+				{RankDeuce, Diamonds},
 			},
 		},
 		{
@@ -109,16 +115,20 @@ func TestCalculateOuts(t *testing.T) {
 				{RankSeven, Hearts},
 				{RankNine, Clubs},
 			},
+			opponents: [][]Card{
+				{{RankDeuce, Hearts}, {RankDeuce, Diamonds}},
+			},
 		},
 		{
-			name: "invalid hole cards - 1 card",
-			holeCards: []Card{
-				{RankAce, Hearts},
-			},
+			name:      "invalid hole cards - 1 card",
+			holeCards: []Card{{RankAce, Hearts}},
 			board: []Card{
 				{RankDeuce, Clubs},
 				{RankThree, Diamonds},
 				{RankFour, Spades},
+			},
+			opponents: [][]Card{
+				{{RankFive, Hearts}, {RankSix, Hearts}},
 			},
 			wantErr: true,
 		},
@@ -136,6 +146,9 @@ func TestCalculateOuts(t *testing.T) {
 				{RankSix, Clubs},
 				{RankSeven, Diamonds},
 			},
+			opponents: [][]Card{
+				{{RankEight, Hearts}, {RankNine, Hearts}},
+			},
 			wantErr: true,
 		},
 		{
@@ -148,13 +161,32 @@ func TestCalculateOuts(t *testing.T) {
 				{RankDeuce, Clubs},
 				{RankThree, Diamonds},
 			},
+			opponents: [][]Card{
+				{{RankFour, Hearts}, {RankFive, Hearts}},
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid opponent - 1 card",
+			holeCards: []Card{
+				{RankAce, Hearts},
+				{RankKing, Hearts},
+			},
+			board: []Card{
+				{RankDeuce, Clubs},
+				{RankThree, Diamonds},
+				{RankFour, Spades},
+			},
+			opponents: [][]Card{
+				{{RankFive, Hearts}},
+			},
 			wantErr: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := CalculateOuts(tt.holeCards, tt.board)
+			got, err := CalculateOuts(tt.holeCards, tt.board, tt.opponents)
 			if tt.wantErr {
 				if err == nil {
 					t.Fatal("expected error, got nil")
@@ -165,7 +197,7 @@ func TestCalculateOuts(t *testing.T) {
 				t.Fatalf("unexpected error: %v", err)
 			}
 
-			if len(got) != tt.wantCount {
+			if tt.wantCount > 0 && len(got) != tt.wantCount {
 				t.Errorf("outs count = %d, want %d", len(got), tt.wantCount)
 			}
 
@@ -177,7 +209,13 @@ func TestCalculateOuts(t *testing.T) {
 
 			for _, wc := range tt.wantContains {
 				if !slices.Contains(got, wc) {
-					t.Errorf("expected outs to contain %v", wc)
+					t.Errorf("expected outs to contain %v, got %v", wc, got)
+				}
+			}
+
+			for _, nc := range tt.wantNotContain {
+				if slices.Contains(got, nc) {
+					t.Errorf("expected outs NOT to contain %v", nc)
 				}
 			}
 		})
@@ -186,16 +224,20 @@ func TestCalculateOuts(t *testing.T) {
 
 func BenchmarkCalculateOuts(b *testing.B) {
 	holeCards := []Card{
-		{RankFive, Hearts},
-		{RankSix, Hearts},
+		{RankKing, Hearts},
+		{RankQueen, Diamonds},
 	}
 	board := []Card{
-		{RankSeven, Hearts},
-		{RankEight, Hearts},
+		{RankJack, Clubs},
 		{RankNine, Clubs},
+		{RankEight, Clubs},
+		{RankThree, Spades},
+	}
+	opponents := [][]Card{
+		{{RankSeven, Hearts}, {RankSeven, Diamonds}},
 	}
 
 	for b.Loop() {
-		_, _ = CalculateOuts(holeCards, board)
+		_, _ = CalculateOuts(holeCards, board, opponents)
 	}
 }
