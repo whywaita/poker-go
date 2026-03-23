@@ -10,6 +10,14 @@ type Card struct {
 	Suit Suit
 }
 
+func (c Card) String() string {
+	return c.Rank.String() + " " + c.Suit.String()
+}
+
+func (c Card) StringShort() string {
+	return c.Rank.String() + c.Suit.StringShort()
+}
+
 type Deck struct {
 	Cards []Card
 }
@@ -33,6 +41,21 @@ func (s Suit) String() string {
 		return "diamonds"
 	case Spades:
 		return "spades"
+	default:
+		return "unknown"
+	}
+}
+
+func (s Suit) StringShort() string {
+	switch s {
+	case Hearts:
+		return "h"
+	case Clubs:
+		return "c"
+	case Diamonds:
+		return "d"
+	case Spades:
+		return "s"
 	default:
 		return "unknown"
 	}
@@ -226,7 +249,7 @@ func (h HandType) String() string {
 
 func NewDeck() *Deck {
 	d := &Deck{Cards: make([]Card, 52)}
-	for i := 0; i < 13; i++ {
+	for i := range 13 {
 		d.Cards[i] = Card{UnmarshalRank(i + 2), Hearts}
 		d.Cards[i+13] = Card{UnmarshalRank(i + 2), Clubs}
 		d.Cards[i+26] = Card{UnmarshalRank(i + 2), Diamonds}
@@ -250,7 +273,7 @@ func (d *Deck) DrawCard() Card {
 
 func (d *Deck) DrawCards(n int) []Card {
 	cards := make([]Card, n)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		cards[i] = d.DrawCard()
 	}
 	return cards

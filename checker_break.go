@@ -29,12 +29,12 @@ func breakTieByHighCardWithoutPair(pairs1, pairs2 [][]Card, hand1, hand2 []Card)
 			hand1 = removeCards(hand1, c)
 		}
 	case len(pairs1) == 2:
-		for i := 0; i < 1; i++ {
+		for i := range 1 {
 			for _, c := range pairs1[i] {
 				hand1 = removeCards(hand1, c)
 			}
 		}
-		for i := 0; i < 1; i++ {
+		for i := range 1 {
 			for _, c := range pairs2[i] {
 				hand2 = removeCards(hand2, c)
 			}
@@ -128,7 +128,7 @@ func breakTieByFlush(hand1, hand2 []Card, board []Card) (Winner, error) {
 		return WinnerUnknown, fmt.Errorf("input is not flush (p1: %v, p2: %v, board: %v)", flush1, flush2, board)
 	}
 
-	for i := 0; i < len(flush1); i++ {
+	for i := range flush1 {
 		if flush1[i].Rank > flush2[i].Rank {
 			return WinnerPlayer1, nil
 		} else if flush1[i].Rank < flush2[i].Rank {

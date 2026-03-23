@@ -54,7 +54,7 @@ func IsStraight(cards []Card) *[]Card {
 
 	cards = sortByRank(cards)
 	// Straight is staring three in seven cards
-	for i := 0; i < 3; i++ {
+	for i := range 3 {
 		count := 0
 		for j := i; j < len(cards)-1; j++ {
 			if (j + 1) >= len(cards) {
