@@ -45,31 +45,27 @@ func EvaluateEquityByMadeHandWithCommunity(players []Player, community []Card) (
 		deck.RemoveCard(c)
 	}
 
-	wins := make([]int, len(players))
-
-	var ties int
+	shares := make([]float64, len(players))
 	var total int
 	for _, board := range AllCombinations(deck.Cards, 5-len(community)) {
 		winners, err := CompareHandsByMadeHand(players, append(community, board...))
 		if err != nil {
 			return nil, err
 		}
-		switch {
-		case len(winners) == len(players):
-			ties++
-		default:
-			for _, winner := range winners {
-				wins[indexOf(winner, players)] += 1
-			}
+		if len(winners) == 0 {
+			total++
+			continue
+		}
+		share := 1.0 / float64(len(winners))
+		for _, winner := range winners {
+			shares[indexOf(winner, players)] += share
 		}
 		total++
 	}
 
-	equities := make([]float64, 0, len(players))
-	baseTies := ties / len(players)
-
-	for _, win := range wins {
-		equities = append(equities, float64(win+baseTies)/float64(total))
+	equities := make([]float64, len(players))
+	for i, s := range shares {
+		equities[i] = s / float64(total)
 	}
 
 	return equities, nil

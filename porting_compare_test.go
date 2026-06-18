@@ -134,8 +134,8 @@ func TestEvaluateEquityByMadeHand(t *testing.T) {
 				},
 			},
 			want: []float64{
-				0.12031274820359002,
-				0.8796866677879629,
+				0.12031304020781357,
+				0.8796869597921865,
 			},
 		},
 		{
@@ -164,9 +164,9 @@ func TestEvaluateEquityByMadeHand(t *testing.T) {
 				},
 			},
 			want: []float64{
-				0.08533040939512122,
-				0.6633188741378833,
-				0.2513507164669955,
+				0.08533040939511266,
+				0.6633188741379331,
+				0.25135071646699475,
 			},
 		},
 	}
@@ -284,8 +284,8 @@ func TestEvaluateEquityByMadeHandWithCommunity(t *testing.T) {
 				},
 			},
 			want: []float64{
-				0,
-				0,
+				0.5,
+				0.5,
 			},
 		},
 	}
