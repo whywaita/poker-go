@@ -45,9 +45,17 @@ func EvaluateEquity(players []Player) ([]float64, error) {
 }
 
 // Evaluate returns the best hand type and cards for the given cards.
+// The cards slice must contain exactly 7 unique cards (no duplicates).
 func Evaluate(cards []Card) (HandType, []Card, error) {
 	if len(cards) != 7 {
 		return 0, nil, fmt.Errorf("invalid number of cards")
+	}
+	seen := make(map[Card]bool, 7)
+	for _, c := range cards {
+		if seen[c] {
+			return 0, nil, fmt.Errorf("duplicate card: %s", c)
+		}
+		seen[c] = true
 	}
 	return evaluate(cards)
 }

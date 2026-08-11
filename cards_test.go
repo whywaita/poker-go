@@ -236,6 +236,23 @@ func TestEvaluate(t *testing.T) {
 	}
 }
 
+func TestEvaluateDuplicateCards(t *testing.T) {
+	input := []poker.Card{
+		{Rank: poker.RankAce, Suit: poker.Hearts},
+		{Rank: poker.RankKing, Suit: poker.Hearts},
+		{Rank: poker.RankAce, Suit: poker.Clubs},
+		{Rank: poker.RankAce, Suit: poker.Spades},
+		{Rank: poker.RankKing, Suit: poker.Hearts}, // duplicate of index 1
+		{Rank: poker.RankFour, Suit: poker.Hearts},
+		{Rank: poker.RankJack, Suit: poker.Hearts},
+	}
+
+	_, _, err := poker.Evaluate(input)
+	if err == nil {
+		t.Error("expected error for duplicate cards, got nil")
+	}
+}
+
 func TestEvaluateEquity(t *testing.T) {
 	tests := []struct {
 		name  string
